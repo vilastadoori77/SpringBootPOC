@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FindLargeFiles.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RestSearchFiles</a> &gt; <a href="index.source.html" class="el_package">searchfiles.model</a> &gt; <span class="el_source">FindLargeFiles.java</span></div><h1>FindLargeFiles.java</h1><pre class="source lang-java linenums">package searchfiles.model;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import com.github.fge.largetext.LargeText;
+import com.github.fge.largetext.LargeTextFactory;
+
+
+
+@Component //to be managed by spring
+<span class="fc" id="L19">public class FindLargeFiles {</span>
+	
+	private String patternToSearch;
+<span class="fc" id="L22">	private List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L23">	private static final Logger log = LoggerFactory.getLogger(FindLargeFiles.class);</span>
+<span class="fc" id="L24">	final LargeTextFactory factory = LargeTextFactory.defaultFactory();</span>
+	
+
+	public String getpatternToSearch() 
+	{
+<span class="fc" id="L29">		return patternToSearch;</span>
+	}
+
+
+	public void setpatternToSearch(String patternToSearch) 
+	{		
+<span class="fc" id="L35">		log.info(&quot;Pattern to search is set as &quot; + patternToSearch);</span>
+<span class="fc" id="L36">		this.patternToSearch = patternToSearch;</span>
+<span class="fc" id="L37">	}</span>
+	
+	public List&lt;String&gt; getResult()
+	{
+<span class="fc" id="L41">		return result;</span>
+	}
+	
+	
+	public void searchDirectory(File directory, String patternToSearch) 
+	{
+
+		
+<span class="fc" id="L49">		log.info(&quot;Pattern To Search in the searchDirectory() &quot; + patternToSearch);</span>
+<span class="fc" id="L50">		setpatternToSearch(patternToSearch);</span>
+
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">		if (directory.isDirectory()) </span>
+		{
+<span class="fc" id="L54">		    search(directory);</span>
+<span class="fc" id="L55">		} </span>
+		else 
+		{
+		    
+		    
+<span class="nc" id="L60">		    log.info(directory.getAbsoluteFile() + &quot; is not a directory!&quot;);</span>
+		}
+
+<span class="fc" id="L63">	}</span>
+	
+	
+	private void search(File file) {
+		
+<span class="fc" id="L68">		String patternSearch = getpatternToSearch();</span>
+
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">		if (file.isDirectory()) {</span>
+		  
+<span class="fc" id="L72">		  log.info(&quot;Searching directory ... &quot; + file.getAbsoluteFile());</span>
+
+	            //do you have permission to read this directory?
+		  
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">		    if (file.canRead()) </span>
+		    {
+		    	
+		    	//Pattern p = Pattern.compile(patternSearch);
+		    	
+<span class="fc bfc" id="L81" title="All 2 branches covered.">		    	for (File temp : file.listFiles()) </span>
+		    	{
+<span class="fc" id="L83">		    		Path bigTestTextFile = Paths.get(temp.getAbsolutePath());</span>
+<span class="fc" id="L84">					log.info(&quot;\n&quot;);</span>
+		    		
+<span class="fc" id="L86">		    		log.info(&quot; List of Files &quot; + temp + &quot; \n&quot;);</span>
+		    		
+<span class="fc bfc" id="L88" title="All 2 branches covered.">		    		if (temp.isDirectory())</span>
+		    		{
+<span class="fc" id="L90">		    			search(temp);</span>
+<span class="fc" id="L91">		    		}</span>
+		    		else 
+		    		{
+<span class="fc" id="L94">		    			try(LargeText largetestText = factory.fromPath(bigTestTextFile);)				</span>
+		    			{
+<span class="fc" id="L96">		    				Pattern PATTERN = Pattern.compile(patternSearch);	 </span>
+			
+<span class="fc" id="L98">		    				Matcher m = PATTERN.matcher(largetestText);</span>
+			 
+<span class="fc bfc" id="L100" title="All 2 branches covered.">		    				if(m.find())</span>
+		    				{
+<span class="fc" id="L102">		    					result.add(&quot;Found File Name&quot;+&quot;---&quot;+temp.getName()+&quot; &quot;+&quot;Path&quot;+&quot;----&quot;+temp.getAbsolutePath() );</span>
+		    				}
+				
+<span class="pc bpc" id="L105" title="4 of 8 branches missed.">		    			}</span>
+<span class="fc" id="L106">					    catch(Exception e)</span>
+					    {
+<span class="fc" id="L108">					      log.info(&quot;\n Error processing file : &quot;+temp.getName());</span>
+					    }
+		    		}
+		    	}		    		
+<span class="fc" id="L112">		    }</span>
+		    else		    	
+		    {
+<span class="nc" id="L115">		    	log.info(file.getAbsoluteFile() + &quot;Permission Denied&quot;);</span>
+		     }	      
+		}
+<span class="fc" id="L118">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

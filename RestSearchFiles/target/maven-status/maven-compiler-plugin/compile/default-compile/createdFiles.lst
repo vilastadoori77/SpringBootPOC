@@ -1,0 +1,5 @@
+searchfiles/controller/WebController.class
+searchfiles/model/FileSearch.class
+searchfiles/controller/SearchFileController.class
+searchfiles/model/FindLargeFiles.class
+searchfiles/RestSearchFilesApplication.class

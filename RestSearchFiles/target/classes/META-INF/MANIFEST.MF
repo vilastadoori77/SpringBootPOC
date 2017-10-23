@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: RestSearchFiles
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: sumanshreeansh
+Implementation-Vendor-Id: com.vilas.searchfiles
+Build-Jdk: 1.8.0_91
+Implementation-URL: http://projects.spring.io/spring-boot/restsearchfi
+ les/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

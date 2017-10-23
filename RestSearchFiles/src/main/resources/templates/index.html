@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+ 
+<html>
+<head>
+      <title>Spring Boot - Search Files </title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    
+      <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container">
+	<h1>SEARCH FOR THE FILES</h1>      
+    <div id="postdiv">
+        <form id="searchForm" action="/searchresults" method="get">
+            <label>Path of the Directory</label>
+            <input type="text" id="dir" class="form-control" name="dir"/>
+            <label>Key Words To Search</label>
+            <input type="text" id="keyword" class="form-control" name="keyword"/>
+            <button type="submit" id="getBtn" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <br/>
+ 
+    <div id="getResultDiv">
+    	<ul class="list-group">
+    	</ul>
+    </div>
+     
+</div>
+</body>
+</html>

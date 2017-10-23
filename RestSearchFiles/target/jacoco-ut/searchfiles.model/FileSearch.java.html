@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FileSearch.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RestSearchFiles</a> &gt; <a href="index.source.html" class="el_package">searchfiles.model</a> &gt; <span class="el_source">FileSearch.java</span></div><h1>FileSearch.java</h1><pre class="source lang-java linenums">package searchfiles.model;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.springframework.stereotype.Component;
+
+
+@Component
+<span class="fc" id="L14">public class FileSearch {</span>
+	
+	private String patternToSearch;
+<span class="fc" id="L17">	private List&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+	
+
+
+
+	public String getpatternToSearch() 
+	{
+<span class="nc" id="L24">		return patternToSearch;</span>
+	}
+
+
+	public void setpatternToSearch(String patternToSearch) 
+	{
+<span class="nc" id="L30">		System.out.println(&quot;in the setpatternToSearch() + Pattern To Search&quot; + patternToSearch);</span>
+<span class="nc" id="L31">		this.patternToSearch = patternToSearch;</span>
+<span class="nc" id="L32">	}</span>
+	
+	public List&lt;String&gt; getResult()
+	{
+<span class="nc" id="L36">		return result;</span>
+	}
+	
+	
+	public void searchDirectory(File directory, String patternToSearch) 
+	{
+
+<span class="nc" id="L43">		System.out.println(&quot;Pattern To Search searchDirectory()&quot; + patternToSearch);</span>
+<span class="nc" id="L44">		setpatternToSearch(patternToSearch);</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">		if (directory.isDirectory()) </span>
+		{
+<span class="nc" id="L48">		    search(directory);</span>
+<span class="nc" id="L49">		} </span>
+		else 
+		{
+<span class="nc" id="L52">		    System.out.println(directory.getAbsoluteFile() + &quot; is not a directory!&quot;);</span>
+		}
+
+<span class="nc" id="L55">	}</span>
+	
+	
+	
+	private void search(File file) {
+		
+<span class="nc" id="L61">		String patternSearch = getpatternToSearch();</span>
+
+<span class="nc bnc" id="L63" title="All 2 branches missed.">		if (file.isDirectory()) {</span>
+<span class="nc" id="L64">		  System.out.println(&quot;Searching directory ... &quot; + file.getAbsoluteFile());</span>
+
+	            //do you have permission to read this directory?
+<span class="nc" id="L67">		  int i =0;</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">		    if (file.canRead()) </span>
+		    {
+<span class="nc" id="L70">		    	System.out.println(&quot;getpatternToSearch()&quot; + getpatternToSearch());</span>
+<span class="nc" id="L71">		    	Pattern p = Pattern.compile(patternSearch);</span>
+		    	
+<span class="nc bnc" id="L73" title="All 2 branches missed.">		    	for (File temp : file.listFiles()) </span>
+		    	{
+<span class="nc" id="L75">		    		System.out.println(&quot;TEMP----&quot; + temp);</span>
+		    		
+<span class="nc bnc" id="L77" title="All 2 branches missed.">		    		if (temp.isDirectory())</span>
+		    		{
+<span class="nc" id="L79">		    			search(temp);</span>
+<span class="nc" id="L80">		    		}</span>
+		    		else 
+		    		{
+		    			try
+		    			{
+<span class="nc" id="L85">					      FileInputStream fis = new FileInputStream(temp);</span>
+<span class="nc" id="L86">					      byte[] data = new byte[fis.available()];</span>
+<span class="nc" id="L87">					      fis.read(data);</span>
+<span class="nc" id="L88">					      String text = new String(data);</span>
+<span class="nc" id="L89">					      Matcher m = p.matcher(text);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">						      if(m.find())</span>
+						      {
+<span class="nc" id="L92">						    	  	result.add(temp.getName()+&quot;=====&quot;+temp.getAbsolutePath()); // add file to found-keyword list.</span>
+						      }
+<span class="nc" id="L94">						      fis.close();</span>
+<span class="nc" id="L95">		    			} </span>
+<span class="nc" id="L96">					    catch(Exception e)</span>
+					    {
+<span class="nc" id="L98">					      System.out.print(&quot;\n\t Error processing file : &quot;+temp.getName());</span>
+					    }
+		    			
+		    	
+		    			
+		    		
+		    			
+		    	}
+
+		    }
+<span class="nc" id="L108">		    	System.out.println(&quot;i&quot;+&quot; : &quot;+ i++);	</span>
+<span class="nc" id="L109">		    }</span>
+		     else 
+		     {
+<span class="nc" id="L112">		    	System.out.println(file.getAbsoluteFile() + &quot;Permission Denied&quot;);</span>
+		     }	      
+
+		}
+<span class="nc" id="L116">	}</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
