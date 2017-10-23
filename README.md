@@ -80,7 +80,7 @@ Once the files are found it would add the results in the ArrayList and pass the 
     - Ran JAR  ( java -jar target/restsearchfiles-0.0.1-SNAPSHOT.jar ) outside the IDE and was able to bring up the UI and         search.
      - Starting Tomcat service on custom port 9596 outside IDE
      
-      ![Alt text](Tomcat_service_run_outside_IDE.png "Tomcat Service Launch Outside IDE")
+       ![Alt text](Tomcat_service_run_outside_IDE.png "Tomcat Service Launch Outside IDE")
       
      - View to Launch The Search Page
      
